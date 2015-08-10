@@ -1,5 +1,57 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  .navbar
+    a(href="/") Home
+  h1 Welcome to MentorMatter.
+  form#createForm(action="/create" method="post")
+    .field
+      .left
+        label(for="type") I am a: 
+      .right
+        select(id="type" name="type")
+          option(name="mentor" value="mentor") Mentor
+          option(name="student" value="student") Student
+    .field
+      .left
+        label(for="name") My name is: 
+      .right
+        input(type="text" name="name" id="name" placeholder="Joe Shmoe")
+    .field
+      .left
+        label(for="email") My email is: 
+      .right
+        input(type="text" name="email" id="email" placeholder="Joe@example.com")
+    .field
+      .left
+        label(for="password") Enter a password: 
+      .right
+        input(type="password" name="password" id="password")
+    .field
+      .left
+        label(for="confirm") Confirm password: 
+      .right
+        input(type="password" name="confirm" id="confirm")
+    .field
+      .left
+      .right
+        input(type="submit" id="createButton" name="createButton" value="Create Account")
+  form#loginForm(action="/login" method="post")
+    .field
+      .left
+        label(for="email") Email: 
+      .right
+        input(type="text" name="email" id="email" placeholder="Joe@example.com")
+    .field
+      .left
+        label(for="password") Enter password: 
+      .right
+        input(type="password" name="password" id="password")
+    .field
+      .left
+      .right
+        input(type="submit" id="loginButton" name="loginButton" value="Log In")
+    if msg
+      .field
+        .left
+          p= msg

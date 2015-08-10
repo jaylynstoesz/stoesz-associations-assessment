@@ -1,0 +1,20 @@
+extends layout
+
+block content
+  .navbar
+    a(href="/home") Home
+    a(href="/logout") Logout
+    a(href="/deleteAcct") Delete Account
+  .all
+    .content
+      h1 Welcome, #{name}!
+      h2 Your connections:
+      for each in connections
+        if each
+          div
+            a(href='/profile/' + each.id) #{each.name}
+    .sidebar
+      h2 Suggested Connections:
+      for each in suggestions
+        div
+          a(href='/profile/' + each._id)= each.name

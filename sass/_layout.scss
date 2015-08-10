@@ -1,0 +1,32 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  width: 80%;
+  margin: 0 auto;
+}
+
+.navbar {
+  width: 100%;
+  padding: 10px;
+  background-color: green;
+  display: inline-block;
+  a {
+    float: right;
+    display: inline-block;
+    padding-left: 10px
+  }
+}
+
+.sidebar {
+  width: 30%;
+  float: right;
+  display: inline-block;
+}
+
+.content {
+  width: 70%;
+  display: inline-block;
+  float: left;
+}

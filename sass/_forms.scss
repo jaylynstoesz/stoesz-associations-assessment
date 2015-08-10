@@ -1,0 +1,16 @@
+.field {
+  width: 100%;
+  padding: 1%;
+}
+
+.left {
+  width: 30%;
+}
+
+.right {
+  width: 70%;
+}
+
+.left, .right {
+  display: inline-block;
+}
