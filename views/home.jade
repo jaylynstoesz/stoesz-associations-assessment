@@ -10,11 +10,18 @@ block content
       h1 Welcome, #{name}!
       h2 Your connections:
       for each in connections
-        if each
-          div
-            a(href='/profile/' + each.id) #{each.name}
-    .sidebar
-      h2 Suggested Connections:
-      for each in suggestions
         div
-          a(href='/profile/' + each._id)= each.name
+          a(href='/profile/' + each.id) #{each.name}
+      h2 Your meetings:
+      for each in meetings
+        div
+          p Meeting with 
+            a(href="/profile/" + each.invitee) #{each.meetingObj.invitee} 
+            span scheduled by 
+            a(href="/profile/" + each.creator) #{each.meetingObj.creator} 
+            span at #{each.meetingObj.date}
+    .sidebar
+      h2 All users:
+      for each in allUsers
+        div
+          a(href="/profile/" + each._id) #{each.name}
