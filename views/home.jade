@@ -2,26 +2,28 @@ extends layout
 
 block content
   .navbar
-    a(href="/home") Home
     a(href="/logout") Logout
-    a(href="/deleteAcct") Delete Account
+    a(href="/home") Home
+    a(href="/profile/" + id) Profile
   .all
-    .content
+    .header
       h1 Welcome, #{name}!
-      h2 Your connections:
-      for each in connections
-        div
-          a(href='/profile/' + each.id) #{each.name}
-      h2 Your meetings:
-      for each in meetings
-        div
-          p Meeting with 
+    .content
+      h2 Your Meetings
+      #meetings
+        for each in meetings
+          div
+            span Meeting with 
             a(href="/profile/" + each.invitee) #{each.meetingObj.invitee} 
             span scheduled by 
             a(href="/profile/" + each.creator) #{each.meetingObj.creator} 
-            span at #{each.meetingObj.date}
+            span on #{each.meetingObj.date}
     .sidebar
-      h2 All users:
-      for each in allUsers
-        div
-          a(href="/profile/" + each._id) #{each.name}
+      h2 Suggested Connections
+      #connections
+        for each in allUsers
+          div
+            a(href="/profile/" + each._id) #{each.name}
+  .footer
+    a(href="https://github.com/jaylynstoesz") Github
+    a(href="/deleteAcct") Delete Account

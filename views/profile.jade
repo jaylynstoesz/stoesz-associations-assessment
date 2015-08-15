@@ -2,17 +2,31 @@ extends layout
 
 block content
   .navbar
-    a(href="/home") Home
     a(href="/logout") Logout
+    a(href="/home") Home
+    a(href="/profile/" + id) Profile
+  .all
+    .header
+      h1 #{thePerson.name}
+      form#disconnectForm(action="/disconnect/" + thePerson._id method="get")
+        input(type="submit" id="disconnectButton" name="disconnectButton" value="Disconnect")
+      form#connectForm(action="/connect/" + thePerson._id method="get")
+        input(type="submit" id="connectButton" name="connectButton" value="Connect")
+    .content
+      h2 About #{thePerson.name}
+      h3 #{thePerson.name} is a #{thePerson.type}
+      h3 Dream job: Hodor
+      p Hodor. Hodor hodor... Hodor hodor hodor. Hodor, hodor... Hodor hodor hodor hodor! Hodor, hodor hodor hodor, hodor. Hodor hodor, hodor. Hodor hodor hodor. Hodor hodor HODOR! Hodor hodor hodor HODOR hodor, hodor hodor hodor hodor? Hodor hodor - hodor hodor hodor, hodor, hodor hodor.
+      p Hodor, hodor. Hodor. Hodor, hodor - hodor?! Hodor! Hodor hodor, hodor... Hodor hodor hodor? Hodor, HODOR hodor, hodor hodor. Hodor. Hodor hodor - HODOR hodor, hodor hodor, hodor, hodor hodor. Hodor. Hodor HODOR hodor, hodor hodor hodor hodor, hodor, hodor hodor. 
+      
+    .sidebar
+      #meetings
+        h2 Meetings:
+        for meeting in meetings
+          div= meeting.date
+      form#meetingForm(method="post" action="/meeting/" + thePerson._id)
+        input(type="date" name="date" id="date")
+        input(type="submit" id="meetingButton" name="meetingButton" value="Schedule a meeting")
+  .footer
+    a(href="https://github.com/jaylynstoesz") Github
     a(href="/deleteAcct") Delete Account
-  h1 #{thePerson.name}
-  form#connectForm(action="/connect/" + thePerson._id method="get")
-    input(type="submit" id="connectButton" name="connectButton" value="Connect with this person")
-  form#disconnectForm(action="/disconnect/" + thePerson._id method="get")
-    input(type="submit" id="disconnectButton" name="disconnectButton" value="Disonnect from this person")
-  form#meetingForm(method="post" action="/meeting/" + thePerson._id)
-    input(type="date" name="date" id="date")
-    input(type="submit" id="meetingButton" name="meetingButton" value="Schedule a meeting")
-  div Meetings:
-    for meeting in meetings
-      div= meeting.date

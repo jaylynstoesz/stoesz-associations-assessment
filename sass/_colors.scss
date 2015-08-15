@@ -1,0 +1,42 @@
+$primary: #283D3B;
+// dark teal
+$secondary: #197278;
+//light teal
+$tertiary: #C44536;
+//light red
+$accent: #772E25;
+//dark red
+$background: #EDEAE8;
+// off-white
+
+body {
+  background-color: $background;
+}
+
+.navbar, .footer {
+  background-color: $primary;
+  a {
+    color: $background;
+  }
+  a:hover {
+    background-color: $secondary;
+  }
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: $primary;
+}
+
+a {
+  color: $secondary;
+}
+
+#meetings {
+  color: $tertiary;
+  a {
+    color: $accent;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+}

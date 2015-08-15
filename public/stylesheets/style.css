@@ -49,29 +49,60 @@ table {
 * {
   box-sizing: border-box; }
 
-body {
+a {
+  padding: 10px;
+  border-radius: 2px; }
+
+.all {
   width: 80%;
-  margin: 0 auto; }
+  margin: 0 auto;
+  height: 45em; }
 
 .navbar {
   width: 100%;
-  padding: 10px;
-  background-color: green;
   display: inline-block; }
   .navbar a {
     float: right;
     display: inline-block;
     padding-left: 10px; }
 
-.sidebar {
-  width: 30%;
-  float: right;
+.header, .footer {
+  width: 100%; }
+  .header h1, .footer h1 {
+    display: inline-block; }
+
+.footer {
+  height: 10em;
+  text-align: center;
+  vertical-align: middle;
+  padding: 20px; }
+  .footer a {
+    width: 10px; }
+
+.sidebar, .content, .header, .footer {
   display: inline-block; }
 
 .content {
-  width: 70%;
-  display: inline-block;
+  width: 50%;
   float: left; }
+
+.sidebar {
+  width: 30%;
+  float: right; }
+
+#meetings {
+  overflow: scroll;
+  height: 20em; }
+  #meetings a {
+    padding: 3px; }
+
+#connectForm, #disconnectForm {
+  display: inline-block;
+  width: auto;
+  padding: 10px;
+  float: right; }
+  #connectForm input, #disconnectForm input {
+    padding: 5px; }
 
 .field {
   width: 100%;
@@ -86,8 +117,69 @@ body {
 .left, .right {
   display: inline-block; }
 
+a, p, span {
+  text-decoration: none;
+  font-size: 1.1em; }
+
+#connections a:hover {
+  text-decoration: underline; }
+
+#connectForm input, #disconnectForm input {
+  font-size: 2.5em; }
+
+html {
+  font-size: 0.875em; }
+
 body {
-  font-family: 'Open Sans', sans-serif; }
+  background-color: white;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 400;
+  line-height: 1.45;
+  color: #333; }
+
+p {
+  margin-bottom: 1.3em; }
+
+h1, h2, h3, h4 {
+  margin: 1.414em 0 0.5em;
+  font-weight: inherit;
+  line-height: 1.2; }
+
+h1 {
+  margin-top: 0;
+  font-size: 3.157em; }
+
+h2 {
+  font-size: 2.369em; }
+
+h3 {
+  font-size: 1.777em; }
+
+h4 {
+  font-size: 1.333em; }
+
+small, .font_small {
+  font-size: 0.75em; }
+
+body {
+  background-color: #EDEAE8; }
+
+.navbar, .footer {
+  background-color: #283D3B; }
+  .navbar a, .footer a {
+    color: #EDEAE8; }
+  .navbar a:hover, .footer a:hover {
+    background-color: #197278; }
+
+h1, h2, h3, h4, h5, h6 {
+  color: #283D3B; }
 
 a {
-  text-decoration: none; }
+  color: #197278; }
+
+#meetings {
+  color: #C44536; }
+  #meetings a {
+    color: #772E25; }
+  #meetings a:hover {
+    text-decoration: underline; }

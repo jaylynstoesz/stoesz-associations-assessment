@@ -38,8 +38,6 @@ router.get('/home', function(req, res, next) {
     allUsers = result
   })
 
-
-
   User.findOne({_id: id}).then(function (user) {
     var meetingList = [];
     var promiseArray = []
@@ -65,10 +63,10 @@ router.get('/home', function(req, res, next) {
         } else {
           meeting.meetingObj.invitee = data[i][1].name
         }
-        
+
       })
       console.log('meeting data!!!!', user.meetings)
-      res.render('home', {name: user.name, connections: user.connections, meetings: user.meetings, allUsers: allUsers})
+      res.render('home', {id: user._id, name: user.name, connections: user.connections, meetings: user.meetings, allUsers: allUsers})
     })
   })
 });
@@ -141,7 +139,7 @@ router.get('/profile/:id', function (req, res, next) {
       console.log("PROFILE FOR:", record);
       return record
     }).then(function (record) {
-      res.render('profile', {thePerson: record, meetings: allMeetings})
+      res.render('profile', {id: req.cookies.id, thePerson: record, meetings: allMeetings})
     })
   })
 })
