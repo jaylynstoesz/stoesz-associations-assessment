@@ -1,29 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var bcrypt = require('bcryptjs');
-var db = require('../lib/mongoose.js');
-
-var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/mm');
-mongoose.set('debug', true);
-
-var userSchema = new mongoose.Schema({
-  type: String,
-  name: String,
-  email: String,
-  password: String,
-  connections: Array,
-  meetings: Array
-})
-
-var meetingSchema = new mongoose.Schema({
-  date: Date,
-  creator: String,
-  invitee: String,
-})
-
-var User = mongoose.model("User", userSchema)
-var Meeting = mongoose.model("Meeting", meetingSchema)
+var lib = require('../lib/mongoose.js');
 
 /* GET index page. */
 router.get('/', function(req, res, next) {
@@ -34,9 +12,7 @@ router.get('/home', function(req, res, next) {
   // db.findAllUsers();
   var id = req.cookies.id
   var allUsers;
-  User.find({}).then(function (result) {
-    allUsers = result
-  })
+  allUsers = lib.getAllUsers();
 
   User.findOne({_id: id}).then(function (user) {
     var meetingList = [];
@@ -65,6 +41,7 @@ router.get('/home', function(req, res, next) {
         }
 
       })
+
       console.log('meeting data!!!!', user.meetings)
       res.render('home', {id: user._id, name: user.name, connections: user.connections, meetings: user.meetings, allUsers: allUsers})
     })
@@ -76,38 +53,27 @@ router.post('/create', function (req, res, next) {
   var name = req.body.name;
   var email = req.body.email;
   var password = req.body.password;
-  User.create(
-    {
-      type: type,
-      name: name,
-      email: email,
-      password: password
-    },
-    function(err, user) {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log("NEW USER CREATED:", user);
-      }
-    }
-  ).then(function (newUser) {
+  lib.createNewUser(type, name, email, password).then(function (newUser) {
+    console.log("NEWUSER:", newUser);
     res.cookie('name', newUser.name)
     res.cookie('id', newUser._id)
     res.redirect('/home');
-  })
+  });
 });
 
 router.post('/login', function (req, res, next) {
-  User.findOne({email: req.body.email}).then(function(user){
-    console.log(user);
-    if (user === null) {
-      res.render ('index', {msg: "User not found."})
-    } else if (req.body.password === user.password) {
-      res.cookie("id", user._id);
-      res.cookie("name", user.name);
-      res.redirect('/home');
-    } else {
+  var email = req.body.email;
+  var password = req.body.password;
+  lib.login(email, password).then(function (validate) {
+    console.log("INDX VAL:", validate);
+    if (!validate.user) {
+      res.render('index', {msg: "User not found."})
+    } else if (!validate.password) {
       res.render('index', {msg: "Password does not match."})
+    } else {
+      res.cookie('id', validate.id)
+      res.cookie('name', validate.name)
+      res.redirect('/home')
     }
   })
 });
@@ -119,12 +85,11 @@ router.get('/logout', function (req, res, next) {
 })
 
 router.get('/deleteAcct', function (req, res, next) {
-  User.findOne({_id: req.cookies.id}, function (err, record) {
-    record.remove();
+  lib.deleteAcct(req.cookies.id).then(function () {
     res.clearCookie('id');
     res.clearCookie('name');
     res.redirect('/');
-  });
+  })
 })
 
 router.get('/profile/:id', function (req, res, next) {
