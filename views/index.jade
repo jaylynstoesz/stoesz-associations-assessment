@@ -7,6 +7,12 @@ block content
     a(href="/deleteAllMeetings") Delete All Meetings
     a(href="/") Home
   h1 Welcome to MentorMatter.
+  if createErrors
+    .field
+      .left
+        ul.errors Please correct the following errors: 
+          for each in createErrors
+            li= each
   form#createForm(action="/create" method="post")
     .field
       .left
@@ -19,12 +25,12 @@ block content
       .left
         label(for="name") My name is: 
       .right
-        input(type="text" name="name" id="name" placeholder="Joe Shmoe")
+        input(type="text" name="name" id="name" placeholder="Joe Shmoe" value=name)
     .field
       .left
         label(for="email") My email is: 
       .right
-        input(type="text" name="email" id="email" placeholder="Joe@example.com")
+        input(type="text" name="email" id="email" placeholder="Joe@example.com" value=email)
     .field
       .left
         label(for="password") Enter a password: 
@@ -50,7 +56,7 @@ block content
       .left
         label(for="email") Email: 
       .right
-        input(type="text" name="email" id="email" placeholder="Joe@example.com")
+        input(type="text" name="emailLogin" id="emailLogin" placeholder="Joe@example.com" value=emailLogin)
     .field
       .left
         label(for="password") Enter password: 

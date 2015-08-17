@@ -33,22 +33,25 @@ block content
           for each in errors
             li= each
       #meetMe
-        form#meetingForm(method="post" action="/setMeeting/" + thePerson._id)
-          h2 Schedule a meeting with #{thePerson.name}
-          .field
-            .left
-              label(for="subject") Topic: 
-            .right
-              input(type="text" name="topic" id="topic" value=topic)
-          .field
-            .left
-              label(for="date") Select date: 
-            .right
-              input(type="date" name="date" id="date" value=date)
-          .field
-            .left
-            .right
-              input(type="submit" id="meetingButton" name="meetingButton" value="Schedule")
+        if connected
+          form#meetingForm(method="post" action="/setMeeting/" + thePerson._id)
+            h2 Schedule a meeting with #{thePerson.name}
+            .field
+              .left
+                label(for="subject") Topic: 
+              .right
+                input(type="text" name="topic" id="topic" value=topic)
+            .field
+              .left
+                label(for="date") Select date: 
+              .right
+                input(type="date" name="date" id="date" value=date)
+            .field
+              .left
+              .right
+                input(type="submit" id="meetingButton" name="meetingButton" value="Schedule")
+        else
+          h2 Connect with #{thePerson.name} to schedule a meeting!
   .footer
     a(href="https://github.com/jaylynstoesz") Github
     a(href="/deleteAcct") Delete Account

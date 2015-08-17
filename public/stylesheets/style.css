@@ -110,16 +110,21 @@ a {
   overflow: scroll;
   height: 20em; }
 
-#meetings {
-  overflow: scroll;
-  height: 32em; }
-  #meetings a {
+#meetings, #connections {
+  overflow: scroll; }
+  #meetings a, #connections a {
     padding: 3px; }
-  #meetings a.clickme {
+  #meetings a.clickme, #connections a.clickme {
     display: block;
     width: 100%;
     height: 100px;
     padding: 15px; }
+
+#meetings {
+  height: 32em; }
+
+#connections, #suggestions {
+  height: 10em; }
 
 #connectForm, #disconnectForm {
   display: inline-block;
@@ -205,32 +210,30 @@ body {
   background-color: #EDEAE8; }
 
 .errors {
-  color: #C44536; }
+  color: #F79256; }
 
 .navbar-top {
-  background-color: #C44536; }
+  background-color: #F79256; }
 
 .navbar, .footer {
-  background-color: #283D3B; }
+  background-color: #1D4E89; }
   .navbar a, .footer a {
     color: #EDEAE8; }
-  .navbar a:hover, .footer a:hover {
-    background-color: #197278; }
 
 h1, h2, h3, h4, h5, h6 {
-  color: #283D3B; }
+  color: #1D4E89; }
 
 a {
-  color: #197278; }
+  color: #84C318; }
 
 #meetMe {
   color: #EDEAE8;
-  background-color: #197278; }
+  background-color: #84C318; }
   #meetMe h2 {
     color: #EDEAE8; }
 
 #meetingDiv {
-  background-color: #197278;
+  background-color: #84C318;
   color: #EDEAE8;
   box-shadow: 2px 2px 2px #000; }
   #meetingDiv a {
@@ -239,4 +242,9 @@ a {
     text-decoration: underline; }
 
 #meetingDiv:hover {
-  background-color: #C44536; }
+  background-color: #9AA899; }
+
+#connections a {
+  color: #1D4E89; }
+  #connections a .details {
+    color: #F79256; }

@@ -1,11 +1,11 @@
-$primary: #283D3B;
-// dark teal
-$secondary: #197278;
-//light teal
-$tertiary: #C44536;
-//light red
-$accent: #772E25;
-//dark red
+$primary: #1D4E89;
+// blue
+$secondary: #84C318;
+//green
+$tertiary: #9AA899;
+// gray
+$accent: #F79256;
+//orange
 $background: #EDEAE8;
 // off-white
 $black: #000;
@@ -15,11 +15,11 @@ body {
 }
 
 .errors {
-  color: $tertiary;
+  color: $accent;
 }
 
 .navbar-top {
-  background-color: $tertiary;
+  background-color: $accent;
 }
 
 .navbar, .footer {
@@ -27,9 +27,9 @@ body {
   a {
     color: $background;
   }
-  a:hover {
-    background-color: $secondary;
-  }
+  // a:hover {
+  //   background-color: $tertiary;
+  // }
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -61,4 +61,13 @@ a {
 }
 #meetingDiv:hover {
   background-color: $tertiary;
+}
+
+#connections {
+  a {
+    color: $primary;
+    .details {
+      color: $accent;
+    }
+  }
 }

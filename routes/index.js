@@ -34,24 +34,27 @@ router.get('/home', function(req, res, next) {
   lib.getAllRecords().then(function (allUsers) {
 
     // var userMeetings
-    // lib.join(id).then(function (res) {
-    //   console.log("**********", res);
-    // })
-    return lib.getOneUser(id).then(function (user) {
-      var promiseArray = []
-      for (var i = 0; i < user.meetings.length; i++) {
-        promiseArray.push(lib.getMeetingInfo(user.meetings[i]))
-      }
-      return Promise.all(promiseArray).then(function (objs) {
-        objs.forEach(function (obj) {
-          if (obj.creatorId.toString() === user._id.toString()) {
-            obj.creator = "you"
-          }
-          if (obj.inviteeId.toString() === user._id.toString()) {
-            obj.invitee = "you"
-          }
+    lib.join(id).then(function (joined) {
+      console.log("**********", joined);
+      return joined
+    }).then(function (joined) {
+      return lib.getOneUser(id).then(function (user) {
+        console.log("HOME PAGE FOR:", user);
+        var promiseArray = []
+        for (var i = 0; i < user.meetings.length; i++) {
+          promiseArray.push(lib.getMeetingInfo(user.meetings[i]))
+        }
+        return Promise.all(promiseArray).then(function (objs) {
+          objs.forEach(function (obj) {
+            if (obj.creatorId.toString() === user._id.toString()) {
+              obj.creator = "you"
+            }
+            if (obj.inviteeId.toString() === user._id.toString()) {
+              obj.invitee = "you"
+            }
+          })
+          res.render('home', {theUser: user, connections: user.connections, joined: joined, meetings: objs, allUsers: allUsers})
         })
-        res.render('home', {id: user._id, name: user.name, connections: user.connections, meetings: objs, allUsers: allUsers})
       })
 
       // var meetingList = [];
@@ -94,25 +97,33 @@ router.post('/create', function (req, res, next) {
   var name = req.body.name;
   var email = req.body.email;
   var password = req.body.password;
-  lib.createNewUser(type, name, email, password).then(function (newUser) {
-    console.log("NEWUSER:", newUser);
-    res.cookie('name', newUser.name)
-    res.cookie('id', newUser._id)
-    res.redirect('/home');
-  });
+  var confirm = req.body.confirm;
+  var errors = msg.createErr(email, password, confirm)
+  if (errors.length > 0) {
+    res.render('index', {createErrors: errors, title: 'MentorMatter', type: type, name: name, email: email})
+  } else {
+    lib.createNewUser(type, name, email, password).then(function (newUser) {
+      console.log("NEWUSER:", newUser);
+      res.cookie('name', newUser.name)
+      res.cookie('id', newUser._id)
+      res.redirect('/home');
+    });
+  }
 });
 
 router.post('/login', function (req, res, next) {
-  var errors = msg.loginErr(req.body.email, req.body.password)
+  var email = req.body.emailLogin
+  var password = req.body.password
+  var errors = msg.loginErr(email, password)
   if (errors.length > 0) {
-    res.render('index', {loginErrors: errors, title: 'MentorMatter'})
+    res.render('index', {loginErrors: errors, emailLogin: email, title: 'MentorMatter'})
   } else {
-    lib.login(req.body.email, req.body.password).then(function (validate) {
+    lib.login(email, password).then(function (validate) {
       console.log("INDX VAL:", validate);
       if (!validate.user) {
-        res.render('index', {loginErrors: ["User not found."], title: 'MentorMatter'})
+        res.render('index', {loginErrors: ["User not found. Please try again or create a new account."], emailLogin: email, title: 'MentorMatter'})
       } else if (!validate.password) {
-        res.render('index', {loginErrors: ["Password does not match."], title: 'MentorMatter'})
+        res.render('index', {loginErrors: ["Password does not match."], emailLogin: email, title: 'MentorMatter'})
       } else {
         res.cookie('id', validate.id)
         res.cookie('name', validate.name)
@@ -167,7 +178,7 @@ router.post('/setMeeting/:id', function (req, res, next) {
           return result
         })
       })).then(function (connections) {
-        res.render('profile', {thePerson: record, id: req.cookies.id, connections: connections, errors: errors, date: date, topic: topic})
+        res.render('profile', {thePerson: record, id: req.cookies.id, connected: true, connections: connections, errors: errors, date: date, topic: topic})
       })
     })
   } else {

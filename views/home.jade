@@ -5,12 +5,12 @@ block content
   .navbar
     a(href="/logout") Logout
     a(href="/home") Home
-    a(href="/profile/" + id) Profile
+    a(href="/profile/" + theUser._id) Profile
   .all
     .header
-      h1 Welcome, #{name}!
+      h1 Welcome, #{theUser.name}!
     .content
-      h2 Your Meetings
+      h2 All Meetings
       #meetings
         for each in meetings
           a.clickme#meetingDiv(href="/meeting/" + each._id)
@@ -18,11 +18,25 @@ block content
             br
             span Meeting  on #{each.date} with #{each.invitee} scheduled by #{each.creator}
     .sidebar
-      h2 Suggested Connections
+      h2 Your connections
       #connections
+        for each in joined
+          a(href="/profile/" + each._id)
+            span.topic #{each.name}
+            ul
+              for meeting in each.meetings
+                a(href="/meeting/" + meeting._id)
+                  span.details #{meeting.date} - #{meeting.topic}
+                  br
+      if theUser.type === "mentor"
+        h2 Connect with students
+      else
+        h2 Connect with mentors
+      #suggestions
         for each in allUsers
-          div
-            a(href="/profile/" + each._id) #{each.name}
+          if each.type !== theUser.type
+            div
+              a(href="/profile/" + each._id) #{each.name}
   .footer
     a(href="https://github.com/jaylynstoesz") Github
     a(href="/deleteAcct") Delete Account

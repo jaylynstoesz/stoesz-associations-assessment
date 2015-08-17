@@ -81,9 +81,8 @@ a {
   height: 20em;
 }
 
-#meetings {
+#meetings, #connections {
   overflow: scroll;
-  height: 32em;
   a {
     padding: 3px;
   }
@@ -93,6 +92,14 @@ a {
     height: 100px;
     padding: 15px;
   }
+}
+
+#meetings {
+  height: 32em;
+}
+
+#connections, #suggestions {
+  height: 10em;
 }
 
 #connectForm, #disconnectForm {
