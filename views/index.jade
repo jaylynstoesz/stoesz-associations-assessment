@@ -1,6 +1,7 @@
 extends layout
 
 block content
+  .navbar-top
   .navbar
     a(href="/deleteAllUsers") Delete All Users
     a(href="/deleteAllMeetings") Delete All Meetings
@@ -39,6 +40,12 @@ block content
       .right
         input(type="submit" id="createButton" name="createButton" value="Create Account")
   form#loginForm(action="/login" method="post")
+    if loginErrors
+      .field
+        .left
+          ul.errors Please correct the following errors: 
+            for each in loginErrors
+              li= each
     .field
       .left
         label(for="email") Email: 
@@ -53,9 +60,7 @@ block content
       .left
       .right
         input(type="submit" id="loginButton" name="loginButton" value="Log In")
-    if msg
-      .field
-        .left
-          p= msg
+
+            
   .footer
     a(href="https://github.com/jaylynstoesz") Github

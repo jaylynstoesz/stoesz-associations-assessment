@@ -34,9 +34,9 @@ router.get('/home', function(req, res, next) {
   lib.getAllRecords().then(function (allUsers) {
 
     // var userMeetings
-    lib.join(id).then(function (res) {
-      console.log("**********", res);
-    })
+    // lib.join(id).then(function (res) {
+    //   console.log("**********", res);
+    // })
     return lib.getOneUser(id).then(function (user) {
       var promiseArray = []
       for (var i = 0; i < user.meetings.length; i++) {
@@ -103,20 +103,23 @@ router.post('/create', function (req, res, next) {
 });
 
 router.post('/login', function (req, res, next) {
-  var email = req.body.email;
-  var password = req.body.password;
-  lib.login(email, password).then(function (validate) {
-    console.log("INDX VAL:", validate);
-    if (!validate.user) {
-      res.render('index', {msg: "User not found."})
-    } else if (!validate.password) {
-      res.render('index', {msg: "Password does not match."})
-    } else {
-      res.cookie('id', validate.id)
-      res.cookie('name', validate.name)
-      res.redirect('/home')
-    }
-  })
+  var errors = msg.loginErr(req.body.email, req.body.password)
+  if (errors.length > 0) {
+    res.render('index', {loginErrors: errors, title: 'MentorMatter'})
+  } else {
+    lib.login(req.body.email, req.body.password).then(function (validate) {
+      console.log("INDX VAL:", validate);
+      if (!validate.user) {
+        res.render('index', {loginErrors: ["User not found."], title: 'MentorMatter'})
+      } else if (!validate.password) {
+        res.render('index', {loginErrors: ["Password does not match."], title: 'MentorMatter'})
+      } else {
+        res.cookie('id', validate.id)
+        res.cookie('name', validate.name)
+        res.redirect('/home')
+      }
+    })
+  }
 });
 
 router.get('/logout', function (req, res, next) {
