@@ -28,16 +28,10 @@ router.get('/deleteAllMeetings', function (req, res, next) {
 });
 
 router.get('/home', function(req, res, next) {
-  // db.findAllUsers();
   var id = req.cookies.id
   var allUsers;
   lib.getAllRecords().then(function (allUsers) {
-
-    // var userMeetings
     lib.join(id).then(function (joined) {
-      console.log("**********", joined);
-      return joined
-    }).then(function (joined) {
       return lib.getOneUser(id).then(function (user) {
         console.log("HOME PAGE FOR:", user);
         var promiseArray = []
@@ -56,7 +50,6 @@ router.get('/home', function(req, res, next) {
           res.render('home', {theUser: user, connections: user.connections, joined: joined, meetings: objs, allUsers: allUsers})
         })
       })
-
       // var meetingList = [];
       // var promiseArray = []
       // for (var i = 0; i < user.meetings.length; i++) {
@@ -83,13 +76,8 @@ router.get('/home', function(req, res, next) {
       //     }
       //
       //   })
-
-      // console.log('meeting data!!!!', user.meetings)
-      // console.log('allUsers!!!!', allUsers)
     })
   })
-  // })
-
 });
 
 router.post('/create', function (req, res, next) {
@@ -119,7 +107,6 @@ router.post('/login', function (req, res, next) {
     res.render('index', {loginErrors: errors, emailLogin: email, title: 'MentorMatter'})
   } else {
     lib.login(email, password).then(function (validate) {
-      console.log("INDX VAL:", validate);
       if (!validate.user) {
         res.render('index', {loginErrors: ["User not found. Please try again or create a new account."], emailLogin: email, title: 'MentorMatter'})
       } else if (!validate.password) {
@@ -156,11 +143,8 @@ router.get('/profile/:id', function (req, res, next) {
       }
     })
     Promise.all(record.connections.map(function (connection) {
-      return lib.getOneUser(connection).then(function (result) {
-        return result
-      })
+      return lib.getOneUser(connection)
     })).then(function (results) {
-      console.log("CONNECTIONS:", results);
       res.render('profile', {id: req.cookies.id, thePerson: record, connected: connected, connections: results})
     })
   })
@@ -172,18 +156,14 @@ router.post('/setMeeting/:id', function (req, res, next) {
   var errors = msg.meetingErr(topic, date);
   if (errors.length > 0) {
     lib.getOneUser(req.params.id).then(function (record) {
-      console.log("PROFILE FOR:", record);
       Promise.all(record.connections.map(function (connection) {
-        return lib.getOneUser(connection).then(function (result) {
-          return result
-        })
+        return lib.getOneUser(connection)
       })).then(function (connections) {
         res.render('profile', {thePerson: record, id: req.cookies.id, connected: true, connections: connections, errors: errors, date: date, topic: topic})
       })
     })
   } else {
     lib.createNewMeeting(date, req.cookies.id, req.params.id, topic).then(function (newMeeting) {
-      console.log("NEW MEETING:", newMeeting);
       lib.updateMeetings(req.cookies.id, newMeeting._id);
       lib.updateMeetings(req.params.id, newMeeting._id);
       res.redirect('/profile/' + req.params.id)
@@ -235,17 +215,10 @@ router.get('/meeting/:id/edit', function (req, res, next) {
 
 router.get('/meeting/:id/delete', function (req, res, next) {
   lib.getMeetingInfo(req.params.id).then(function (meeting) {
-    return lib.removeMeeting(meeting.creatorId, req.params.id).then(function (result) {
-      return result
-    }).then(function () {
-      return lib.removeMeeting(meeting.inviteeId, req.params.id).then(function (result) {
-        return result
-      })
-    }).then(function () {
-      return lib.deleteMeeting(meeting._id)
-    }).then(function () {
-      res.redirect('/home')
-    })
+    lib.removeMeeting(meeting.creatorId, req.params.id)
+    lib.removeMeeting(meeting.inviteeId, req.params.id)
+    lib.deleteMeeting(meeting._id)
+    res.redirect('/home')
   })
 })
 
