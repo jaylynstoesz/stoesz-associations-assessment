@@ -104,6 +104,11 @@ a {
   #connectForm input, #disconnectForm input {
     padding: 5px; }
 
+#meetingDiv {
+  border: 1px solid black;
+  padding: 10px;
+  margin: 5px; }
+
 .field {
   width: 100%;
   padding: 1%; }

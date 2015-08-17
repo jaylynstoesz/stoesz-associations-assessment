@@ -5,47 +5,81 @@ var lib = require('../lib/mongoose.js');
 
 /* GET index page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'MentorMatter' });
+  lib.getAllRecords().then(function () {
+    res.render('index', { title: 'MentorMatter' });
+  })
+});
+
+router.get('/deleteAll', function (req, res, next) {
+  lib.deleteAllUsers().then(function () {
+    lib.getAllRecords().then(function () {
+      res.redirect('/');
+    })
+  })
 });
 
 router.get('/home', function(req, res, next) {
   // db.findAllUsers();
   var id = req.cookies.id
   var allUsers;
-  allUsers = lib.getAllUsers();
+  lib.getAllRecords("User").then(function (allUsers) {
 
-  User.findOne({_id: id}).then(function (user) {
-    var meetingList = [];
-    var promiseArray = []
-    for (var i = 0; i < user.meetings.length; i++) {
-      var subProm = []
-      user.meetings[i].meetingObj = {}
-      user.meetings[i].meetingObj.date = user.meetings[i].date
-      subProm.push(User.findOne({_id: user.meetings[i].creator}))
-      subProm.push(User.findOne({_id: user.meetings[i].invitee}))
-      promiseArray.push(Promise.all(subProm))
-    }
-    Promise.all(promiseArray).then(function (data) {
-      user.meetings.forEach(function (meeting, i) {
-
-        if (meeting.creator.toString() === user._id.toString()) {
-          meeting.meetingObj.creator = "you"
-        } else {
-          meeting.meetingObj.creator = data[i][0].name
+  var userMeetings
+  return lib.getOneUser(id).then(function (user) {
+    Promise.all(user.meetings.map(function (id) {
+      return lib.getMeetingInfo(id)
+    })).then(function (objs) {
+      console.log("OBJS:", objs);
+      console.log(user._id);
+      objs.forEach(function (obj) {
+        if (obj.creatorId.toString() === user._id.toString()) {
+          obj.creator = "you"
         }
-
-        if (meeting.invitee.toString() === user._id.toString()) {
-          meeting.meetingObj.invitee = "you"
-        } else {
-          meeting.meetingObj.invitee = data[i][1].name
+        if (obj.inviteeId.toString() === user._id.toString()) {
+          obj.invitee = "you"
         }
-
       })
+      console.log(objs);
+      res.render('home', {id: user._id, name: user.name, connections: user.connections, meetings: objs, allUsers: allUsers})
+    })
+    console.log(user);
 
-      console.log('meeting data!!!!', user.meetings)
-      res.render('home', {id: user._id, name: user.name, connections: user.connections, meetings: user.meetings, allUsers: allUsers})
+    // console.log("GETONEUSER RESULT:", user);
+
+
+    // var meetingList = [];
+    // var promiseArray = []
+    // for (var i = 0; i < user.meetings.length; i++) {
+    //   var subProm = []
+    //   user.meetings[i].meetingObj = {}
+    //   user.meetings[i].meetingObj.date = user.meetings[i].date
+    //   subProm.push(User.findOne({_id: user.meetings[i].creator}))
+    //   subProm.push(User.findOne({_id: user.meetings[i].invitee}))
+    //   promiseArray.push(Promise.all(subProm))
+    // }
+    // Promise.all(promiseArray).then(function (data) {
+    //   user.meetings.forEach(function (meeting, i) {
+    //
+    //     if (meeting.creator.toString() === user._id.toString()) {
+    //       meeting.meetingObj.creator = "you"
+    //     } else {
+    //       meeting.meetingObj.creator = data[i][0].name
+    //     }
+    //
+    //     if (meeting.invitee.toString() === user._id.toString()) {
+    //       meeting.meetingObj.invitee = "you"
+    //     } else {
+    //       meeting.meetingObj.invitee = data[i][1].name
+    //     }
+    //
+    //   })
+
+      // console.log('meeting data!!!!', user.meetings)
+      // console.log('allUsers!!!!', allUsers)
     })
   })
+  // })
+
 });
 
 router.post('/create', function (req, res, next) {
@@ -93,17 +127,16 @@ router.get('/deleteAcct', function (req, res, next) {
 })
 
 router.get('/profile/:id', function (req, res, next) {
-  var meetings = Meeting.find({creator: req.params.id}, function (err, meetingDocs) {
-    return meetingDocs
-  }).then(function (result) {
-    return Meeting.find({invitee: req.params.id}, function (err, meetingDocs) {
+  lib.dbLookupCreator(req.params.id).then(function (meetingDocs) {
+    return lib.dbLookupInvitee(req.params.id).then(function (result) {
       return meetingDocs.concat(result)
     })
   }).then(function (allMeetings) {
-    User.findOne({_id: req.params.id}).then(function (record) {
+    lib.getOneUser(req.params.id).then(function (record) {
       console.log("PROFILE FOR:", record);
-      return record
-    }).then(function (record) {
+      record.meetings.forEach(function (meeting) {
+        console.log("MEETING:", meeting);
+      })
       res.render('profile', {id: req.cookies.id, thePerson: record, meetings: allMeetings})
     })
   })
@@ -111,39 +144,12 @@ router.get('/profile/:id', function (req, res, next) {
 
 router.post('/meeting/:id', function (req, res, next) {
   var date = req.body.date
-  User.findOne({_id: req.params.id}).then(function (record) {
-    return record
-  }).then(function (record) {
-    var newMeeting;
-    Meeting.create(
-      {
-        date: req.body.date,
-        creator: req.cookies.id,
-        invitee: record._id
-      },
-      function(err, meeting) {
-        if (err) {
-          console.log(err);
-        } else {
-          newMeeting = meeting;
-          console.log(meeting);
-        }
-      }
-    ).then(function () {
-      console.log("RECORD:", record.meetings);
-      var meetTemp = record.meetings;
-      meetTemp.push(newMeeting);
-      console.log("NEW MEETING:", meetTemp);
-      return User.update({_id: record._id}, {$set: {meetings: meetTemp}});
-    }).then(function () {
-      User.findOne({_id: req.cookies.id}).then(function (record) {
-        var meetTemp = record.meetings;
-        meetTemp.push(newMeeting);
-        return User.update({_id: record._id}, {$set: {meetings: meetTemp}});
-      })
-    })
-  });
-  res.redirect('/profile/' + req.params.id)
+  lib.createNewMeeting(date, req.cookies.id, req.params.id).then(function (newMeeting) {
+    console.log("NEW MEETING:", newMeeting);
+    lib.updateMeetings(req.cookies.id, newMeeting._id);
+    lib.updateMeetings(req.params.id, newMeeting._id);
+    res.redirect('/profile/' + req.params.id)
+  })
 })
 
 router.get('/connect/:id', function (req, res, next) {

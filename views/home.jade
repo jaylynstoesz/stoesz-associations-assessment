@@ -12,12 +12,12 @@ block content
       h2 Your Meetings
       #meetings
         for each in meetings
-          div
+          #meetingDiv
             span Meeting with 
-            a(href="/profile/" + each.invitee) #{each.meetingObj.invitee} 
+            a(href="/profile/" + each.inviteeId) #{each.invitee} 
             span scheduled by 
-            a(href="/profile/" + each.creator) #{each.meetingObj.creator} 
-            span on #{each.meetingObj.date}
+            a(href="/profile/" + each.creatorId) #{each.creator} 
+            span on #{each.date}
     .sidebar
       h2 Suggested Connections
       #connections
