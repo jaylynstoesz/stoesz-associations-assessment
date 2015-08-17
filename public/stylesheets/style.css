@@ -58,13 +58,29 @@ a {
   margin: 0 auto;
   height: 45em; }
 
+.navbar-top {
+  width: 100%;
+  height: 18px;
+  box-shadow: 3px 3px 3px black;
+  vertical-align: top;
+  display: inline-block;
+  margin: 0; }
+
 .navbar {
+  margin: 0;
+  vertical-align: top;
   width: 100%;
   display: inline-block; }
   .navbar a {
     float: right;
     display: inline-block;
     padding-left: 10px; }
+
+.errors {
+  padding: 10px; }
+  .errors li {
+    list-style-type: disc;
+    padding: 2px; }
 
 .header, .footer {
   width: 100%; }
@@ -83,18 +99,27 @@ a {
   display: inline-block; }
 
 .content {
-  width: 50%;
+  width: 60%;
   float: left; }
 
 .sidebar {
   width: 30%;
   float: right; }
 
-#meetings {
+#conns {
   overflow: scroll;
   height: 20em; }
+
+#meetings {
+  overflow: scroll;
+  height: 32em; }
   #meetings a {
     padding: 3px; }
+  #meetings a.clickme {
+    display: block;
+    width: 100%;
+    height: 100px;
+    padding: 15px; }
 
 #connectForm, #disconnectForm {
   display: inline-block;
@@ -104,10 +129,17 @@ a {
   #connectForm input, #disconnectForm input {
     padding: 5px; }
 
+#meetMe {
+  padding: 20px;
+  border-radius: 3px; }
+  #meetMe h2 {
+    margin: 0em;
+    padding: 5px; }
+
 #meetingDiv {
-  border: 1px solid black;
-  padding: 10px;
-  margin: 5px; }
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 2px; }
 
 .field {
   width: 100%;
@@ -166,8 +198,17 @@ h4 {
 small, .font_small {
   font-size: 0.75em; }
 
+.topic {
+  font-size: 1.6em; }
+
 body {
   background-color: #EDEAE8; }
+
+.errors {
+  color: #C44536; }
+
+.navbar-top {
+  background-color: #C44536; }
 
 .navbar, .footer {
   background-color: #283D3B; }
@@ -182,9 +223,20 @@ h1, h2, h3, h4, h5, h6 {
 a {
   color: #197278; }
 
-#meetings {
-  color: #C44536; }
-  #meetings a {
-    color: #772E25; }
-  #meetings a:hover {
+#meetMe {
+  color: #EDEAE8;
+  background-color: #197278; }
+  #meetMe h2 {
+    color: #EDEAE8; }
+
+#meetingDiv {
+  background-color: #197278;
+  color: #EDEAE8;
+  box-shadow: 2px 2px 2px #000; }
+  #meetingDiv a {
+    color: #EDEAE8; }
+  #meetingDiv a:hover {
     text-decoration: underline; }
+
+#meetingDiv:hover {
+  background-color: #C44536; }

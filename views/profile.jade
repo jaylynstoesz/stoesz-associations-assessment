@@ -1,6 +1,7 @@
 extends layout
 
 block content
+  .navbar-top
   .navbar
     a(href="/logout") Logout
     a(href="/home") Home
@@ -8,10 +9,13 @@ block content
   .all
     .header
       h1 #{thePerson.name}
-      form#disconnectForm(action="/disconnect/" + thePerson._id method="get")
-        input(type="submit" id="disconnectButton" name="disconnectButton" value="Disconnect")
-      form#connectForm(action="/connect/" + thePerson._id method="get")
-        input(type="submit" id="connectButton" name="connectButton" value="Connect")
+      if connected
+        form#disconnectForm(action="/disconnect/" + thePerson._id method="get")
+          input(type="submit" id="disconnectButton" name="disconnectButton" value="Disconnect")
+      else
+        form#connectForm(action="/connect/" + thePerson._id method="get")
+          input(type="submit" id="connectButton" name="connectButton" value="Connect")
+      
     .content
       h2 About #{thePerson.name}
       h3 #{thePerson.name} is a #{thePerson.type}
@@ -20,13 +24,31 @@ block content
       p Hodor, hodor. Hodor. Hodor, hodor - hodor?! Hodor! Hodor hodor, hodor... Hodor hodor hodor? Hodor, HODOR hodor, hodor hodor. Hodor. Hodor hodor - HODOR hodor, hodor hodor, hodor, hodor hodor. Hodor. Hodor HODOR hodor, hodor hodor hodor hodor, hodor, hodor hodor. 
       
     .sidebar
-      #meetings
-        h2 Meetings:
-        for meeting in meetings
-          div= meeting.date
-      form#meetingForm(method="post" action="/meeting/" + thePerson._id)
-        input(type="date" name="date" id="date")
-        input(type="submit" id="meetingButton" name="meetingButton" value="Schedule a meeting")
+      #conns
+        h2 #{thePerson.name}'s connections'
+        for each in connections
+          a(href='/profile/' + each._id) #{each.name}
+      if errors
+        ul.errors Please correct the following errors: 
+          for each in errors
+            li= each
+      #meetMe
+        form#meetingForm(method="post" action="/setMeeting/" + thePerson._id)
+          h2 Schedule a meeting with #{thePerson.name}
+          .field
+            .left
+              label(for="subject") Topic: 
+            .right
+              input(type="text" name="topic" id="topic" value=topic)
+          .field
+            .left
+              label(for="date") Select date: 
+            .right
+              input(type="date" name="date" id="date" value=date)
+          .field
+            .left
+            .right
+              input(type="submit" id="meetingButton" name="meetingButton" value="Schedule")
   .footer
     a(href="https://github.com/jaylynstoesz") Github
     a(href="/deleteAcct") Delete Account

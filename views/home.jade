@@ -1,6 +1,7 @@
 extends layout
 
 block content
+  .navbar-top
   .navbar
     a(href="/logout") Logout
     a(href="/home") Home
@@ -12,12 +13,10 @@ block content
       h2 Your Meetings
       #meetings
         for each in meetings
-          #meetingDiv
-            span Meeting with 
-            a(href="/profile/" + each.inviteeId) #{each.invitee} 
-            span scheduled by 
-            a(href="/profile/" + each.creatorId) #{each.creator} 
-            span on #{each.date}
+          a.clickme#meetingDiv(href="/meeting/" + each._id)
+            span.topic #{each.topic}
+            br
+            span Meeting  on #{each.date} with #{each.invitee} scheduled by #{each.creator}
     .sidebar
       h2 Suggested Connections
       #connections

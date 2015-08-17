@@ -8,9 +8,18 @@ $accent: #772E25;
 //dark red
 $background: #EDEAE8;
 // off-white
+$black: #000;
 
 body {
   background-color: $background;
+}
+
+.errors {
+  color: $tertiary;
+}
+
+.navbar-top {
+  background-color: $tertiary;
 }
 
 .navbar, .footer {
@@ -31,12 +40,25 @@ a {
   color: $secondary;
 }
 
-#meetings {
-  color: $tertiary;
+#meetMe {
+  color: $background;
+  background-color: $secondary;
+  h2 {
+    color: $background;
+  }
+}
+
+#meetingDiv {
+  background-color: $secondary;
+  color: $background;
+  box-shadow: 2px 2px 2px $black;
   a {
-    color: $accent;
+    color: $background;
   }
   a:hover {
     text-decoration: underline;
   }
+}
+#meetingDiv:hover {
+  background-color: $tertiary;
 }

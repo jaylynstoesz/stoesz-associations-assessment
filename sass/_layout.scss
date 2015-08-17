@@ -16,13 +16,32 @@ a {
   height: 45em;
 }
 
+.navbar-top {
+  width: 100%;
+  height: 18px;
+  box-shadow: 3px 3px 3px black;
+  vertical-align: top;
+  display: inline-block;
+  margin: 0;
+}
+
 .navbar {
+  margin: 0;
+  vertical-align: top;
   width: 100%;
   display: inline-block;
   a {
     float: right;
     display: inline-block;
     padding-left: 10px;
+  }
+}
+
+.errors {
+  padding: 10px;
+  li {
+    list-style-type: disc;
+    padding: 2px;
   }
 }
 
@@ -48,7 +67,7 @@ a {
 }
 
 .content {
-  width: 50%;
+  width: 60%;
   float: left;
 }
 
@@ -57,11 +76,22 @@ a {
   float: right;
 }
 
-#meetings {
+#conns {
   overflow: scroll;
   height: 20em;
+}
+
+#meetings {
+  overflow: scroll;
+  height: 32em;
   a {
     padding: 3px;
+  }
+  a.clickme {
+    display: block;
+    width: 100%;
+    height: 100px;
+    padding: 15px;
   }
 }
 
@@ -75,8 +105,17 @@ a {
   }
 }
 
+#meetMe {
+  padding: 20px;
+  border-radius: 3px;
+  h2 {
+    margin: 0em;
+    padding: 5px;
+  }
+}
+
 #meetingDiv {
-  border: 1px solid black;
-  padding: 10px;
-  margin: 5px;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 2px;
 }

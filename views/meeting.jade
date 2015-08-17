@@ -1,0 +1,19 @@
+extends layout
+
+block content
+  .navbar-top
+  .navbar
+    a(href="/logout") Logout
+    a(href="/home") Home
+    a(href="/profile/" + id) Profile
+  .all
+    .header
+      h1 Meeting about #{theMeeting.topic}
+    .content
+      div
+        p Meeting with: #{theMeeting.invitee}
+        p Scheduled by: #{theMeeting.creator}
+      div
+        p Scheduled for: #{theMeeting.date}
+      a(href="/meeting/" + theMeeting._id + "/edit") Edit this meeting
+      

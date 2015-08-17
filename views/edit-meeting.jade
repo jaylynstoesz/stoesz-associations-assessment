@@ -1,0 +1,33 @@
+extends layout
+
+block content
+  .navbar-top
+  .navbar
+    a(href="/logout") Logout
+    a(href="/home") Home
+    a(href="/profile/" + id) Profile
+  .all
+    .header
+      h1 Edit this meeting
+    .content
+      if errors
+        ul.errors Please correct the following errors: 
+          for each in errors
+            li= each
+      form(method="post" action="/meeting/" + theMeeting._id)
+        .field
+          .left
+            label(for="subject") Topic: 
+          .right
+            input(type="text" name="topic" id="topic" value=theMeeting.topic)
+        .field
+          .left
+            label(for="date") Select date: 
+          .right
+            input(type="date" name="date" id="date" value=theMeeting.date)
+        .field
+          .left
+          .right
+            input(type="submit" id="meetingButton" name="meetingButton" value="Update")
+
+      a(href="/meeting/" + theMeeting._id + "/delete") Cancel this meeting
