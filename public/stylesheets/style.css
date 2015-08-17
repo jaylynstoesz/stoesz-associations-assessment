@@ -58,13 +58,28 @@ a {
   margin: 0 auto;
   height: 45em; }
 
-.navbar-top {
-  width: 100%;
-  height: 18px;
-  box-shadow: 3px 3px 3px black;
-  vertical-align: top;
-  display: inline-block;
-  margin: 0; }
+.content {
+  width: 60%;
+  float: left; }
+
+.errors {
+  padding: 10px; }
+  .errors li {
+    list-style-type: disc;
+    padding: 2px; }
+
+.footer {
+  height: 10em;
+  text-align: center;
+  vertical-align: middle;
+  padding: 20px; }
+  .footer a {
+    width: 10px; }
+
+.header, .footer {
+  width: 100%; }
+  .header h1, .footer h1 {
+    display: inline-block; }
 
 .navbar {
   margin: 0;
@@ -76,55 +91,23 @@ a {
     display: inline-block;
     padding-left: 10px; }
 
-.errors {
-  padding: 10px; }
-  .errors li {
-    list-style-type: disc;
-    padding: 2px; }
-
-.header, .footer {
-  width: 100%; }
-  .header h1, .footer h1 {
-    display: inline-block; }
-
-.footer {
-  height: 10em;
-  text-align: center;
-  vertical-align: middle;
-  padding: 20px; }
-  .footer a {
-    width: 10px; }
+.navbar-top {
+  width: 100%;
+  height: 18px;
+  box-shadow: 3px 3px 3px black;
+  vertical-align: top;
+  display: inline-block;
+  margin: 0; }
 
 .sidebar, .content, .header, .footer {
   display: inline-block; }
-
-.content {
-  width: 60%;
-  float: left; }
 
 .sidebar {
   width: 30%;
   float: right; }
 
-#conns {
-  overflow: scroll;
-  height: 20em; }
-
-#meetings, #connections {
-  overflow: scroll; }
-  #meetings a, #connections a {
-    padding: 3px; }
-  #meetings a.clickme, #connections a.clickme {
-    display: block;
-    width: 100%;
-    height: 100px;
-    padding: 15px; }
-
-#meetings {
-  height: 32em; }
-
-#connections, #suggestions {
-  height: 10em; }
+#connections {
+  height: 12em; }
 
 #connectForm, #disconnectForm {
   display: inline-block;
@@ -134,6 +117,28 @@ a {
   #connectForm input, #disconnectForm input {
     padding: 5px; }
 
+#conns {
+  overflow: scroll;
+  height: 20em; }
+
+#meetings, #connections, #suggestions {
+  overflow: scroll; }
+  #meetings a, #connections a, #suggestions a {
+    padding: 3px; }
+  #meetings a.clickme, #connections a.clickme, #suggestions a.clickme {
+    display: block;
+    width: 100%;
+    height: 100px;
+    padding: 15px; }
+
+#meetings {
+  height: 32em; }
+
+#meetingDiv {
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 2px; }
+
 #meetMe {
   padding: 20px;
   border-radius: 3px; }
@@ -141,10 +146,8 @@ a {
     margin: 0em;
     padding: 5px; }
 
-#meetingDiv {
-  padding: 15px;
-  margin-bottom: 20px;
-  border-radius: 2px; }
+#suggestions {
+  height: 10em; }
 
 .field {
   width: 100%;
@@ -159,16 +162,6 @@ a {
 .left, .right {
   display: inline-block; }
 
-a, p, span {
-  text-decoration: none;
-  font-size: 1.1em; }
-
-#connections a:hover {
-  text-decoration: underline; }
-
-#connectForm input, #disconnectForm input {
-  font-size: 2.5em; }
-
 html {
   font-size: 0.875em; }
 
@@ -178,6 +171,10 @@ body {
   font-weight: 400;
   line-height: 1.45;
   color: #333; }
+
+a, p, span {
+  text-decoration: none;
+  font-size: 1.1em; }
 
 p {
   margin-bottom: 1.3em; }
@@ -206,8 +203,20 @@ small, .font_small {
 .topic {
   font-size: 1.6em; }
 
+#connections a:hover, #suggestions a:hover {
+  text-decoration: underline; }
+
+#connectForm input, #disconnectForm input {
+  font-size: 2.5em; }
+
 body {
   background-color: #EDEAE8; }
+
+h1, h2, h3, h4, h5, h6 {
+  color: #1D4E89; }
+
+a {
+  color: #84C318; }
 
 .errors {
   color: #2C8C99; }
@@ -220,11 +229,10 @@ body {
   .navbar a, .footer a {
     color: #EDEAE8; }
 
-h1, h2, h3, h4, h5, h6 {
+#connections a {
   color: #1D4E89; }
-
-a {
-  color: #84C318; }
+  #connections a .details {
+    color: #2C8C99; }
 
 #meetMe {
   color: #EDEAE8;
@@ -243,8 +251,3 @@ a {
 
 #meetingDiv:hover {
   background-color: #9AA899; }
-
-#connections a {
-  color: #1D4E89; }
-  #connections a .details {
-    color: #2C8C99; }

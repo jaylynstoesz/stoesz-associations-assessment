@@ -11,8 +11,10 @@ block content
       h1 Meeting about #{theMeeting.topic}
     .content
       div
-        p Meeting with: #{theMeeting.invitee}
-        p Scheduled by: #{theMeeting.creator}
+        p Meeting with: 
+          a(href="/profile/" + theMeeting.inviteeId) #{theMeeting.invitee}
+        p Scheduled by: 
+          a(href="/profile/" + theMeeting.creatorId) #{theMeeting.creator}
       div
         p Scheduled for: #{theMeeting.date}
       a(href="/meeting/" + theMeeting._id + "/edit") Edit this meeting
