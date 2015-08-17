@@ -210,10 +210,10 @@ body {
   background-color: #EDEAE8; }
 
 .errors {
-  color: #F79256; }
+  color: #2C8C99; }
 
 .navbar-top {
-  background-color: #F79256; }
+  background-color: #2C8C99; }
 
 .navbar, .footer {
   background-color: #1D4E89; }
@@ -247,4 +247,4 @@ a {
 #connections a {
   color: #1D4E89; }
   #connections a .details {
-    color: #F79256; }
+    color: #2C8C99; }
