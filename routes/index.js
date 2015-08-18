@@ -6,17 +6,13 @@ var msg = require('../lib/messages.js');
 
 /* GET index page. */
 router.get('/', function(req, res, next) {
-  lib.getAllRecords().then(function () {
-    res.render('index', { title: 'MentorMatter' });
-  })
+  lib.getAllRecords()
+  res.render('index', { title: 'MentorMatter' });
 });
 
 router.get('/deleteAllUsers', function (req, res, next) {
-  lib.deleteAllUsers().then(function () {
-    lib.getAllRecords().then(function () {
-      res.redirect('/');
-    })
-  })
+  lib.deleteAllUsers()
+  res.redirect('/');
 });
 
 router.get('/deleteAllMeetings', function (req, res, next) {
@@ -28,6 +24,7 @@ router.get('/deleteAllMeetings', function (req, res, next) {
 });
 
 router.get('/home', function(req, res, next) {
+  // todo: reduce to 3 lines
   var id = req.cookies.id
   var allUsers;
   lib.getAllRecords().then(function (allUsers) {
@@ -100,6 +97,8 @@ router.post('/create', function (req, res, next) {
 });
 
 router.post('/login', function (req, res, next) {
+  // optional TODO: reduce to 3 lines, BUT still make it return a promise,
+  // even if you don't end up doing the find.
   var email = req.body.emailLogin
   var password = req.body.password
   var errors = msg.loginErr(email, password)
@@ -135,6 +134,7 @@ router.get('/deleteAcct', function (req, res, next) {
 })
 
 router.get('/profile/:id', function (req, res, next) {
+  // TODO: easy, also make 3 lines
   lib.getOneUser(req.params.id).then(function (record) {
     var connected = false
     record.connections.forEach(function (connection) {
@@ -155,6 +155,7 @@ router.post('/setMeeting/:id', function (req, res, next) {
   var topic = req.body.topic;
   var errors = msg.meetingErr(topic, date);
   if (errors.length > 0) {
+    // TODO: reduce to one call
     lib.getOneUser(req.params.id).then(function (record) {
       Promise.all(record.connections.map(function (connection) {
         return lib.getOneUser(connection)
