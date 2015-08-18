@@ -8,20 +8,17 @@ var msg = require('../lib/messages.js');
 router.get('/', function(req, res, next) {
   lib.getAllRecords()
   res.render('index', { title: 'MentorMatter' });
-});
+})
 
 router.get('/deleteAllUsers', function (req, res, next) {
   lib.deleteAllUsers()
-  res.redirect('/');
-});
+  res.redirect('/')
+})
 
 router.get('/deleteAllMeetings', function (req, res, next) {
-  lib.deleteAllMeetings().then(function () {
-    lib.getAllMeetings().then(function () {
-      res.redirect('/');
-    })
-  })
-});
+  lib.deleteAllMeetings()
+  res.redirect('/')
+})
 
 router.get('/home', function(req, res, next) {
   // todo: reduce to 3 lines
