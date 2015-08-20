@@ -24,7 +24,7 @@ block content
           a(href="/profile/" + each._id)
             span.topic #{each.name}
             ul
-              for meeting in each.meetings
+              for meeting in each.meetingInfo
                 a(href="/meeting/" + meeting._id)
                   span.details #{meeting.date} - #{meeting.topic}
                   br

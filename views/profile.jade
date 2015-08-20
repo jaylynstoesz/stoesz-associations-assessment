@@ -9,12 +9,13 @@ block content
   .all
     .header
       h1 #{thePerson.name}
-      if connected
-        form#disconnectForm(action="/disconnect/" + thePerson._id method="get")
-          input(type="submit" id="disconnectButton" name="disconnectButton" value="Disconnect")
-      else
-        form#connectForm(action="/connect/" + thePerson._id method="get")
-          input(type="submit" id="connectButton" name="connectButton" value="Connect")
+      if thePerson._id != id
+        if thePerson.connected
+          form#disconnectForm(action="/disconnect/" + thePerson._id method="get")
+            input(type="submit" id="disconnectButton" name="disconnectButton" value="Disconnect")
+        else
+          form#connectForm(action="/connect/" + thePerson._id method="get")
+            input(type="submit" id="connectButton" name="connectButton" value="Connect")
       
     .content
       h2 About #{thePerson.name}
@@ -26,14 +27,14 @@ block content
     .sidebar
       #conns
         h2 #{thePerson.name}'s connections'
-        for each in connections
+        for each in thePerson.connectionsInfo 
           a(href='/profile/' + each._id) #{each.name}
       if errors
         ul.errors Please correct the following errors: 
           for each in errors
             li= each
       #meetMe
-        if connected
+        if thePerson.connected
           form#meetingForm(method="post" action="/setMeeting/" + thePerson._id)
             h2 Schedule a meeting with #{thePerson.name}
             .field

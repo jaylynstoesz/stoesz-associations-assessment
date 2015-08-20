@@ -19,60 +19,32 @@ router.get('/deleteAllMeetings', function (req, res, next) {
   lib.deleteAllMeetings()
   res.redirect('/')
 })
+router.get('/viewAllMeetings', function (req, res, next) {
+  lib.getAllMeetings()
+  res.redirect('/')
+})
 
 router.get('/home', function(req, res, next) {
   // todo: reduce to 3 lines
   var id = req.cookies.id
   var allUsers;
-  lib.getAllRecords().then(function (allUsers) {
-    lib.join(id).then(function (joined) {
-      return lib.getOneUser(id).then(function (user) {
-        console.log("HOME PAGE FOR:", user);
-        var promiseArray = []
-        for (var i = 0; i < user.meetings.length; i++) {
-          promiseArray.push(lib.getMeetingInfo(user.meetings[i]))
-        }
-        return Promise.all(promiseArray).then(function (objs) {
-          objs.forEach(function (obj) {
-            if (obj.creatorId.toString() === user._id.toString()) {
-              obj.creator = "you"
-            }
-            if (obj.inviteeId.toString() === user._id.toString()) {
-              obj.invitee = "you"
-            }
-          })
-          res.render('home', {theUser: user, connections: user.connections, joined: joined, meetings: objs, allUsers: allUsers})
-        })
-      })
-      // var meetingList = [];
-      // var promiseArray = []
-      // for (var i = 0; i < user.meetings.length; i++) {
-      //   var subProm = []
-      //   user.meetings[i].meetingObj = {}
-      //   user.meetings[i].meetingObj.date = user.meetings[i].date
-      //   subProm.push(User.findOne({_id: user.meetings[i].creator}))
-      //   subProm.push(User.findOne({_id: user.meetings[i].invitee}))
-      //   promiseArray.push(Promise.all(subProm))
-      // }
-      // Promise.all(promiseArray).then(function (data) {
-      //   user.meetings.forEach(function (meeting, i) {
-      //
-      //     if (meeting.creator.toString() === user._id.toString()) {
-      //       meeting.meetingObj.creator = "you"
-      //     } else {
-      //       meeting.meetingObj.creator = data[i][0].name
-      //     }
-      //
-      //     if (meeting.invitee.toString() === user._id.toString()) {
-      //       meeting.meetingObj.invitee = "you"
-      //     } else {
-      //       meeting.meetingObj.invitee = data[i][1].name
-      //     }
-      //
-      //   })
+  var user;
+
+  lib.getAllRecords().then(function (users) {
+    allUsers = users
+    return allUsers
+  }).then(function () {
+    return lib.getOneUser(id)
+  }).then(function (record) {
+    user = record
+    var promiseArray = user.meetings.map(lib.getMeetingInfo)
+    return Promise.all(promiseArray)
+  }).then(function (objs) {
+    lib.join(user).then(function (joined) {
+      res.render('home', {theUser: user, connections: user.connections, meetings: objs, joined: joined, allUsers: allUsers})
     })
   })
-});
+})
 
 router.post('/create', function (req, res, next) {
   var type = req.body.type;
@@ -94,8 +66,6 @@ router.post('/create', function (req, res, next) {
 });
 
 router.post('/login', function (req, res, next) {
-  // optional TODO: reduce to 3 lines, BUT still make it return a promise,
-  // even if you don't end up doing the find.
   var email = req.body.emailLogin
   var password = req.body.password
   var errors = msg.loginErr(email, password)
@@ -123,27 +93,15 @@ router.get('/logout', function (req, res, next) {
 })
 
 router.get('/deleteAcct', function (req, res, next) {
-  lib.deleteAcct(req.cookies.id).then(function () {
-    res.clearCookie('id');
-    res.clearCookie('name');
-    res.redirect('/');
-  })
+  lib.deleteAcct(req.cookies.id)
+  res.clearCookie('id');
+  res.clearCookie('name');
+  res.redirect('/');
 })
 
 router.get('/profile/:id', function (req, res, next) {
-  // TODO: easy, also make 3 lines
-  lib.getOneUser(req.params.id).then(function (record) {
-    var connected = false
-    record.connections.forEach(function (connection) {
-      if (connection === req.cookies.id) {
-        connected = true
-      }
-    })
-    Promise.all(record.connections.map(function (connection) {
-      return lib.getOneUser(connection)
-    })).then(function (results) {
-      res.render('profile', {id: req.cookies.id, thePerson: record, connected: connected, connections: results})
-    })
+  lib.getUserProfile(req.params.id, req.cookies.id).then(function (record) {
+    res.render('profile', {id: req.cookies.id, thePerson: record})
   })
 })
 
@@ -152,34 +110,24 @@ router.post('/setMeeting/:id', function (req, res, next) {
   var topic = req.body.topic;
   var errors = msg.meetingErr(topic, date);
   if (errors.length > 0) {
-    // TODO: reduce to one call
-    lib.getOneUser(req.params.id).then(function (record) {
-      Promise.all(record.connections.map(function (connection) {
-        return lib.getOneUser(connection)
-      })).then(function (connections) {
-        res.render('profile', {thePerson: record, id: req.cookies.id, connected: true, connections: connections, errors: errors, date: date, topic: topic})
-      })
+    lib.getUserProfile(req.params.id, req.cookies.id).then(function (results) {
+      res.render('profile', {id: req.cookies.id, thePerson: results, errors: errors, date: date, topic: topic})
     })
   } else {
     lib.createNewMeeting(date, req.cookies.id, req.params.id, topic).then(function (newMeeting) {
-      lib.updateMeetings(req.cookies.id, newMeeting._id);
-      lib.updateMeetings(req.params.id, newMeeting._id);
+      lib.updateMeetings(req.cookies.id, req.params.id, newMeeting._id);
       res.redirect('/profile/' + req.params.id)
     })
   }
 })
 
 router.get('/connect/:id', function (req, res, next) {
-  lib.getOneUser(req.cookies.id).then(function (user) {
-    lib.connect(user._id, req.params.id);
-    lib.connect(req.params.id, user._id);
-    res.redirect('/profile/' + req.params.id)
-  })
+  lib.connect(req.cookies.id, req.params.id);
+  res.redirect('/profile/' + req.params.id)
 })
 
 router.get('/disconnect/:id', function (req, res, next) {
   lib.disconnect(req.cookies.id, req.params.id);
-  lib.disconnect(req.params.id, req.cookies.id);
   res.redirect('/profile/' + req.params.id)
 })
 
@@ -213,9 +161,7 @@ router.get('/meeting/:id/edit', function (req, res, next) {
 
 router.get('/meeting/:id/delete', function (req, res, next) {
   lib.getMeetingInfo(req.params.id).then(function (meeting) {
-    lib.removeMeeting(meeting.creatorId, req.params.id)
-    lib.removeMeeting(meeting.inviteeId, req.params.id)
-    lib.deleteMeeting(meeting._id)
+    lib.removeMeeting(meeting.creatorId, meeting.inviteeId, req.params.id)
     res.redirect('/home')
   })
 })
